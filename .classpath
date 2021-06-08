@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/CARL-PC/Downloads/for_encryption(6)/for encryption/commons-codec-1.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/CARL-PC/Downloads/mysql-connector-java-5.1.36-bin.jar"/>
+	<classpathentry kind="lib" path="commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.36-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
