@@ -17,6 +17,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	private String studentId;
 	private String lastName;
 	private String firstName;
+	private String fullName;
 	private String course; 
 	private int year;
 	private int units;
@@ -64,6 +65,19 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+	public void concatenateFirstNameLastName() {
+		this.fullName = getLastName() + ", " + getFirstName();
+		setFullName(this.fullName);
+	}
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
 	public String getCourse() {
 		return course;
@@ -88,7 +102,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	public void setUnits(int units) {
 		this.units = units;
 	}
-
 	//JDBC Operations
 	private Connection getConnection() {
 		Connection connection = null;
@@ -120,11 +133,10 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			if(connection != null) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.INSERT_INTO_STUDENTS_INFO);
 				pstmt.setString(1, this.studentId);
-				pstmt.setString(2, this.lastName);
-				pstmt.setString(3, this.firstName);
-				pstmt.setString(4, this.course);
-				pstmt.setInt(5, this.year);
-				pstmt.setInt(6, this.units);
+				pstmt.setString(2, this.fullName);
+				pstmt.setString(3, this.course);
+				pstmt.setInt(4, this.year);
+				pstmt.setInt(5, this.units);
 				
 				pstmt.executeUpdate();
 				isSuccess = true;
@@ -216,4 +228,5 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return isSuccess;
 	}
+
 }

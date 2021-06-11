@@ -1,4 +1,6 @@
 package controller;
+import model.StudentBean;
+import java.util.Scanner;
 
 import model.StudentBean;
 
@@ -8,9 +10,9 @@ import java.util.Scanner;
 public class AccessStudentDB {
 
 	public static void main(String[] args) {
-		Scanner userIn = new Scanner(System.in);
-		StudentBean student = new StudentBean();
-		String choice = "";
+		Scanner S = new Scanner(System.in);
+		char userChoice = ' ';
+		
 		System.out.println("[A]-dd Student");
 		System.out.println("[L]-ist Students");
 		System.out.println("[S]-earch Student");
@@ -19,57 +21,67 @@ public class AccessStudentDB {
 		System.out.println("[P]-urge");		
 		System.out.println("[Q]-uit");
 		System.out.println("");
-		System.out.print("Selection Option: ");
-		choice = userIn.nextLine();
-		
-		switch(choice) {
-		
-			case "A":
-				try {
-					String studentId = "";
-					String lastName = "";
-					String firstName = "";
-					String course = "";
-					int year = 0;
-					int units = 0;
-					
-					System.out.print("Enter Student ID: ");
-					studentId = userIn.nextLine();
-					System.out.print("Enter Lastname: ");
-					lastName = userIn.nextLine();
-					System.out.print("Enter Firstname: ");
-					firstName = userIn.nextLine();
-					System.out.print("Enter Course: ");
-					course = userIn.nextLine();
-					System.out.print("Enter Year: ");
-					year = userIn.nextInt();
-					System.out.print("Enter Units: ");
-					units = userIn.nextInt();
-					
-					student.setStudentId(studentId);
-					student.setLastName(lastName);
-					student.setFirstName(firstName);
-					student.setCourse(course);
-					student.setYear(year);
-					student.setUnits(units);
-					
-					if(student.insertRecord()){
-						System.out.println("\nStudent Successfully Added!");
-					}else {
-						System.out.println("\nAn Error Occurred.");
-					}
-					
-					break;
-					
-				}catch(InputMismatchException ime) {
-					System.err.println("\nInvalid Entry! Please Enter An Integer.");
-				}catch(Exception e) {
-					System.err.println("\nAn Unknown Error Occurred.");
-				}
+
+		System.out.println("Selection Option");
+		userChoice = S.next().charAt(0);
+		userChoice = Character.toUpperCase(userChoice);
+	
+		switch(userChoice) {
+		case 'A':
+			// Code here
+			try {
+				S = new Scanner(System.in);
+				StudentBean enterStudent = new StudentBean();
+				System.out.println("Enter Student ID: ");
+				enterStudent.setStudentId(S.nextLine());
+				System.out.println("Enter Student Last Name: ");
+				enterStudent.setLastName(S.nextLine());
+				System.out.println("Enter Student First Name: ");
+				enterStudent.setFirstName(S.nextLine());
+				//Concatenates to one full Name
+				enterStudent.concatenateFirstNameLastName();
+				System.out.println("Enter Student Course: ");
+				enterStudent.setCourse(S.nextLine());
+				System.out.println("Enter Student Year Level: ");
+				enterStudent.setYear(S.nextInt());
+				System.out.println("Enter Number of Units Enrolled: ");
+				enterStudent.setUnits(S.nextInt());
+				enterStudent.insertRecord();
+				break;
 				
+			}catch(InputMismatchException ime) {
+				System.err.println("\nInvalid Input" + ime.getMessage());
+			}catch(Exception e) {
+				System.err.println("An Unknown Error Occurred.");
+			}
+			
+			
+		case 'L':
+			// Code here
+			break;
+		case 'S':
+			// Code here
+			break;
+			
+		case 'D':
+			// Code here
+			break;
+			
+        case 'R':
+        	// Code here
+			break;
+			
+        case 'P':
+        	// Code here
+			break;
 		
-		}
-		
+	    case 'Q':
+	    	// Code here
+		   break;
+		   
+		default:
+			// Code here
 	}
 
+}
 }
