@@ -17,6 +17,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	private String studentId;
 	private String lastName;
 	private String firstName;
+	private String fullName;
 	private String course; 
 	private int year;
 	private int units;
@@ -64,6 +65,20 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+	public void concatenateFirstNameLastName() {
+		String fullName = "";
+		this.fullName = getLastName() + ", " + getFirstName();
+		setFullName(this.fullName);
+	}
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
 	public String getCourse() {
 		return course;
@@ -89,8 +104,9 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		this.units = units;
 	}
 
-	//JDBC Operations
-	private Connection getConnection() {
+//JDBC Operations==================================================================================================================================================================
+	@Override
+	public Connection getConnection() {
 		Connection connection = null;
 		
 		try {
@@ -111,8 +127,8 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return connection;
 	}
-	
-	private boolean insertRecord() {
+	@Override
+	public boolean insertRecord() {
 		boolean isSuccess = false;
 		
 		try {
@@ -120,9 +136,8 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			if(connection != null) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.INSERT_INTO_STUDENTS_INFO);
 				pstmt.setString(1, this.studentId);
-				pstmt.setString(2, this.lastName);
-				pstmt.setString(3, this.firstName);
-				pstmt.setString(4, this.course);
+				pstmt.setString(2, this.fullName);
+				pstmt.setString(3, this.course);
 				pstmt.setInt(4, this.year);
 				pstmt.setInt(5, this.units);
 				
@@ -135,8 +150,8 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return isSuccess;
 	}
-	
-	private boolean selectRecord() {
+	@Override
+	public boolean selectRecord() {
 		boolean isSuccess = false;
 		
 		try {
@@ -146,12 +161,11 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				Statement stmt = connection.createStatement();
 				ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_FROM_STUDENTS_INFO);
 				
-				System.out.println("ID: " + rs.getString("studentId"));
-				System.out.println("Lastname: " + rs.getString("lastName"));
-				System.out.println("Firstname: " + rs.getString("firstName"));
+				System.out.println("ID: " + rs.getString("id"));
+				System.out.println("Name: " + rs.getString("name"));
 				System.out.println("Course: " + rs.getString("course"));
-				System.out.println("Year: " + rs.getInt("year"));
-				System.out.println("Units: " + rs.getInt("units"));
+				System.out.println("Year: " + rs.getInt("yearLevel"));
+				System.out.println("Units: " + rs.getInt("unitsEnrolled"));
 			}
 			
 			
@@ -164,8 +178,10 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return isSuccess;
 	}
-	
-	private boolean searchStudent(String student_id) {
+
+	@Override
+	public boolean searchStudent() {
+		String student_id = getStudentId();
 		boolean isSuccess = false;
 		
 		try {
@@ -173,12 +189,11 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_SEARCH_STUDENT + student_id);
 			
-			System.out.println("ID: " + rs.getString("studentId"));
-			System.out.println("Lastname: " + rs.getString("lastName"));
-			System.out.println("Firstname: " + rs.getString("firstName"));
+			System.out.println("ID: " + rs.getString("id"));
+			System.out.println("Name: " + rs.getString("name"));
 			System.out.println("Course: " + rs.getString("course"));
-			System.out.println("Year: " + rs.getInt("year"));
-			System.out.println("Units: " + rs.getInt("units"));
+			System.out.println("Year: " + rs.getInt("yearLevel"));
+			System.out.println("Units: " + rs.getInt("unitsEnrolled"));
 			
 			isSuccess = true;
 		}catch(SQLException sqle) {
@@ -187,4 +202,12 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return isSuccess;
 	}
+
+
+
+	
+
+
+
+	
 }
