@@ -112,9 +112,9 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			connection = DriverManager.getConnection(DatabaseFunction.JDBC_CONNECTION_URL, 
 					DatabaseFunction.JDBC_USERNAME, DatabaseFunction.JDBC_PASSWORD);
 			if(connection != null) {
-				System.out.println("Connection is valid!");
+				System.out.println("\nConnection is valid!");
 			}else {
-				System.out.println("Connection failed!");
+				System.out.println("\nConnection failed!");
 			}
 		}catch(ClassNotFoundException cnfe){
 			System.err.println("Driver not found! " + cnfe.getMessage());

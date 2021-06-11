@@ -22,7 +22,7 @@ public class AccessStudentDB {
 		System.out.println("[Q]-uit");
 		System.out.println("");
 
-		System.out.println("Selection Option");
+		System.out.print("Selection Option: ");
 		userChoice = S.next().charAt(0);
 		userChoice = Character.toUpperCase(userChoice);
 	
@@ -32,19 +32,19 @@ public class AccessStudentDB {
 			try {
 				S = new Scanner(System.in);
 				StudentBean enterStudent = new StudentBean();
-				System.out.println("Enter Student ID: ");
+				System.out.print("Enter Student ID: ");
 				enterStudent.setStudentId(S.nextLine());
-				System.out.println("Enter Student Last Name: ");
+				System.out.print("Enter Student Last Name: ");
 				enterStudent.setLastName(S.nextLine());
-				System.out.println("Enter Student First Name: ");
+				System.out.print("Enter Student First Name: ");
 				enterStudent.setFirstName(S.nextLine());
 				//Concatenates to one full Name
 				enterStudent.concatenateFirstNameLastName();
-				System.out.println("Enter Student Course: ");
+				System.out.print("Enter Student Course: ");
 				enterStudent.setCourse(S.nextLine());
-				System.out.println("Enter Student Year Level: ");
+				System.out.print("Enter Student Year Level: ");
 				enterStudent.setYear(S.nextInt());
-				System.out.println("Enter Number of Units Enrolled: ");
+				System.out.print("Enter Number of Units Enrolled: ");
 				enterStudent.setUnits(S.nextInt());
 				enterStudent.insertRecord();
 				break;
