@@ -67,17 +67,17 @@ public class AccessStudentDB {
 			// Code here
 			break;
 			
-        case 'R':
-        	// Code here
-			break;
-			
-        case 'P':
-        	// Code here
-			break;
-		
-	    case 'Q':
-	    	// Code here
-		   break;
+		case 'R':
+			// Code here
+				break;
+
+		case 'P':
+			// Code here
+				break;
+
+		case 'Q':
+			// Code here
+			   break;
 		   
 		default:
 			// Code here
