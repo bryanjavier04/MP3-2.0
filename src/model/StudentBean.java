@@ -112,7 +112,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return connection;
 	}
 	
-	private boolean insertRecord() {
+	public boolean insertRecord() {
 		boolean isSuccess = false;
 		
 		try {
@@ -123,8 +123,8 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				pstmt.setString(2, this.lastName);
 				pstmt.setString(3, this.firstName);
 				pstmt.setString(4, this.course);
-				pstmt.setInt(4, this.year);
-				pstmt.setInt(5, this.units);
+				pstmt.setInt(5, this.year);
+				pstmt.setInt(6, this.units);
 				
 				pstmt.executeUpdate();
 				isSuccess = true;
@@ -136,24 +136,25 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	private boolean selectRecord() {
+	public boolean selectRecord() {
 		boolean isSuccess = false;
 		
 		try {
 			Connection connection = getConnection();
 			
-			for(int i = 0; i < StudentBean.totalStudents; ++i) {
-				Statement stmt = connection.createStatement();
-				ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_FROM_STUDENTS_INFO);
-				
+			
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_FROM_STUDENTS_INFO);
+			
+			while(rs.next()) {
 				System.out.println("ID: " + rs.getString("studentId"));
 				System.out.println("Lastname: " + rs.getString("lastName"));
 				System.out.println("Firstname: " + rs.getString("firstName"));
 				System.out.println("Course: " + rs.getString("course"));
 				System.out.println("Year: " + rs.getInt("year"));
 				System.out.println("Units: " + rs.getInt("units"));
+				System.out.println();
 			}
-			
 			
 			isSuccess = true;
 			
@@ -165,7 +166,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	private boolean searchStudent(String student_id) {
+	public boolean searchStudent(String student_id) {
 		boolean isSuccess = false;
 		
 		try {
@@ -184,6 +185,34 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
 		}
+		
+		return isSuccess;
+	}
+	
+	public boolean deleteStudent(String username, String password,String student_id) {
+		boolean isSuccess = false;
+		
+		if(username.equals(DatabaseFunction.JDBC_USERNAME) && password.equals(DatabaseFunction.JDBC_PASSWORD)) {
+			try {
+				Connection connection = getConnection();
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
+				pstmt.setString(1, student_id);
+				
+				StudentBean.totalStudents = pstmt.executeUpdate();
+				System.out.println("Please wait... searching for student record " + student_id);
+				System.out.println("Record found and successfully deleted!");
+				
+				isSuccess = true;
+				
+				
+			}catch(SQLException sqle) {
+				System.err.println(sqle.getMessage());
+				
+			}
+			
+		}
+		
+		
 		
 		return isSuccess;
 	}
