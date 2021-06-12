@@ -1,11 +1,7 @@
 package controller;
 import model.StudentBean;
 import java.util.Scanner;
-
-import model.StudentBean;
-
 import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class AccessStudentDB {
 
@@ -47,14 +43,14 @@ public class AccessStudentDB {
 				System.out.print("Enter Number of Units Enrolled: ");
 				enterStudent.setUnits(S.nextInt());
 				enterStudent.insertRecord();
-				break;
+				
 				
 			}catch(InputMismatchException ime) {
 				System.err.println("\nInvalid Input" + ime.getMessage());
 			}catch(Exception e) {
 				System.err.println("An Unknown Error Occurred.");
 			}
-			
+			break;
 			
 		case 'L':
 			// Code here
@@ -83,5 +79,6 @@ public class AccessStudentDB {
 			// Code here
 	}
 
-}
+
+	}
 }

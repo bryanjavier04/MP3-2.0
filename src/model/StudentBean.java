@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import utility.*;
 import java.sql.*;
 
 public class StudentBean implements Serializable, DatabaseFunction{
@@ -42,6 +43,19 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 	}
 	
+	public String capitalize(String str) {
+		String words[]=str.split("\\s");  
+	    String capitalizeWord=""; 
+		
+		for(String w:words){  
+	        String first=w.substring(0,1);  
+	        String afterfirst=w.substring(1);  
+	        capitalizeWord+=first.toUpperCase()+afterfirst+" ";  
+	    }  
+		
+		return capitalizeWord.trim();  
+	}
+	
 	public String getStudentId() {
 		return studentId;
 	}
@@ -51,39 +65,48 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 
 	public String getLastName() {
+		Security.decrypt(lastName);
 		return lastName;
 	}
 
 	public void setLastName(String lastName) {
+		lastName = capitalize(lastName);
+		lastName = Security.encrypt(lastName);
 		this.lastName = lastName;
 	}
 
 	public String getFirstName() {
+		Security.decrypt(firstName);
 		return firstName;
 	}
 
 	public void setFirstName(String firstName) {
+		firstName = capitalize(firstName);
+		firstName = Security.encrypt(firstName);
 		this.firstName = firstName;
 	}
 	public void concatenateFirstNameLastName() {
-		this.fullName = getLastName() + ", " + getFirstName();
-		setFullName(this.fullName);
+		this.fullName = this.lastName + ", " + this.firstName;
 	}
 
-
 	public String getFullName() {
+		Security.decrypt(fullName);
 		return fullName;
 	}
 
 	public void setFullName(String fullName) {
+		fullName = Security.encrypt(fullName);
 		this.fullName = fullName;
 	}
 
 	public String getCourse() {
+		Security.decrypt(course);
 		return course;
 	}
 
 	public void setCourse(String course) {
+		course = course.toUpperCase();
+		course = Security.encrypt(course);
 		this.course = course;
 	}
 
@@ -124,7 +147,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return connection;
 	}
-	
 	public boolean insertRecord() {
 		boolean isSuccess = false;
 		
@@ -148,57 +170,44 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	public boolean selectRecord() {
-		boolean isSuccess = false;
+	public ResultSet printRecord() {
+		ResultSet records = null;
 		
 		try {
 			Connection connection = getConnection();
 			
-			
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_FROM_STUDENTS_INFO);
-			
-			while(rs.next()) {
-				System.out.println("ID: " + rs.getString("studentId"));
-				System.out.println("Lastname: " + rs.getString("lastName"));
-				System.out.println("Firstname: " + rs.getString("firstName"));
-				System.out.println("Course: " + rs.getString("course"));
-				System.out.println("Year: " + rs.getInt("year"));
-				System.out.println("Units: " + rs.getInt("units"));
-				System.out.println();
+			if(connection != null) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_FROM_STUDENTS_INFO);
+				
+				records = pstmt.executeQuery();
 			}
 			
-			isSuccess = true;
-			
-			
+		
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
 		}
 		
-		return isSuccess;
+		return records;
 	}
 	
-	public boolean searchStudent(String student_id) {
-		boolean isSuccess = false;
+	public ResultSet searchStudent(String student_id) {
+		ResultSet records = null;
 		
 		try {
 			Connection connection = getConnection();
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(DatabaseFunction.SELECT_SEARCH_STUDENT + student_id);
 			
-			System.out.println("ID: " + rs.getString("studentId"));
-			System.out.println("Lastname: " + rs.getString("lastName"));
-			System.out.println("Firstname: " + rs.getString("firstName"));
-			System.out.println("Course: " + rs.getString("course"));
-			System.out.println("Year: " + rs.getInt("year"));
-			System.out.println("Units: " + rs.getInt("units"));
+			if(connection != null) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_SEARCH_STUDENT);
+				pstmt.setString(1, student_id);
+				
+				records = pstmt.executeQuery();
+			}
 			
-			isSuccess = true;
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
 		}
 		
-		return isSuccess;
+		return records;
 	}
 	
 	public boolean deleteStudent(String username, String password,String student_id) {
@@ -207,13 +216,13 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		if(username.equals(DatabaseFunction.JDBC_USERNAME) && password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 			try {
 				Connection connection = getConnection();
-				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
-				pstmt.setString(1, student_id);
-				
-				StudentBean.totalStudents = pstmt.executeUpdate();
-				System.out.println("Please wait... searching for student record " + student_id);
-				System.out.println("Record found and successfully deleted!");
-				
+				if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
+						&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
+					PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
+					pstmt.setString(1, student_id);
+					
+					pstmt.executeUpdate();
+				}
 				isSuccess = true;
 				
 				
@@ -224,9 +233,45 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			
 		}
 		
+		return isSuccess;
+	}
+	
+	public ResultSet reportGenerator(String username, String password, String course) {
+		ResultSet records = null;
 		
+		try {
+			Connection connection = getConnection();
+			if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
+					&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR);
+				pstmt.setString(1, course);
+				
+				records = pstmt.executeQuery();
+			}
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
+		
+		return records;
+	}
+	
+	public boolean purgeRecords(String username, String password) {
+		boolean isSuccess = false;
+		
+		try {
+			Connection connection = getConnection();
+			if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
+					&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_ALL_RECORDS);
+				pstmt.executeUpdate();
+				isSuccess = true;
+			}
+			
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
 		
 		return isSuccess;
 	}
-
+	
 }
