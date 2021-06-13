@@ -1,12 +1,17 @@
 package controller;
 import model.StudentBean;
+import view.DisplayStudent;
+import java.sql.*;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class AccessStudentDB {
 
 	public static void main(String[] args) {
+		StudentBean studentObject = new StudentBean();
+		ResultSet records = null;
 		Scanner S = new Scanner(System.in);
+		boolean result = false;
 		char userChoice = ' ';
 		
 		System.out.println("[A]-dd Student");
@@ -53,14 +58,30 @@ public class AccessStudentDB {
 			break;
 			
 		case 'L':
-			// Code here
+			records = new StudentBean().getRecords();
+			DisplayStudent.listStudents(records);
 			break;
 		case 'S':
-			// Code here
+			S = new Scanner(System.in);
+			System.out.print("Enter Student ID: ");
+			records = new StudentBean().searchStudent(S.nextLine());
+			DisplayStudent.searchStudentOutput(records);
 			break;
-			
 		case 'D':
-			// Code here
+			String userName;
+			String userPassword;
+			String studentID;
+			S = new Scanner(System.in);
+			System.out.print("Enter administrator account: ");
+			userName = S.nextLine();
+			System.out.print("Enter administrator password: ");
+			userPassword = S.nextLine();
+			if(DisplayStudent.adminAuthentication(userName, userPassword)) {
+				System.out.print("Enter Student ID: ");
+				studentID = S.nextLine();
+				result = new StudentBean().deleteStudent(studentID);
+				DisplayStudent.searchDeleteStudentOutput(result, studentID);
+			}
 			break;
 			
 		case 'R':

@@ -20,10 +20,11 @@ public interface DatabaseFunction {
 	
 	//SQL FUNCTIONS
 	public boolean insertRecord();
-	public ResultSet printRecord();
+	public ResultSet getRecords();
 	public ResultSet searchStudent(String student_id);
-	public boolean deleteStudent(String username, String password, String student_id);
+	public boolean deleteStudent( String student_id);
 	public ResultSet reportGenerator(String username, String password, String course);
 	public boolean purgeRecords(String username, String password);
+	
 	
 }

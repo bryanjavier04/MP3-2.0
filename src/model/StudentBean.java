@@ -147,6 +147,29 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return connection;
 	}
+	
+	//ADMIN LOGIN
+	public Connection adminConnection(String adminUserName, String adminPassWord) {
+		Connection connection = null;
+		
+		try {
+			//establish java JDBC Driver
+			Class.forName(DatabaseFunction.JDBC_DRIVER);
+			connection = DriverManager.getConnection(DatabaseFunction.JDBC_CONNECTION_URL, 
+					adminUserName, adminPassWord);
+			if(connection != null) {
+				System.out.println("\nLogin is Successful");
+			}else {
+				System.out.println("\nConnection failed!");
+			}
+		}catch(ClassNotFoundException cnfe){
+			System.err.println("Driver not found! " + cnfe.getMessage());
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
+		
+		return connection;
+	}
 	public boolean insertRecord() {
 		boolean isSuccess = false;
 		
@@ -170,7 +193,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	public ResultSet printRecord() {
+	public ResultSet getRecords() {
 		ResultSet records = null;
 		
 		try {
@@ -198,9 +221,10 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			
 			if(connection != null) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_SEARCH_STUDENT);
+					
 				pstmt.setString(1, student_id);
-				
 				records = pstmt.executeQuery();
+				records.next();
 			}
 			
 		}catch(SQLException sqle) {
@@ -210,19 +234,16 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return records;
 	}
 	
-	public boolean deleteStudent(String username, String password,String student_id) {
+	public boolean deleteStudent(String student_id) {
 		boolean isSuccess = false;
 		
-		if(username.equals(DatabaseFunction.JDBC_USERNAME) && password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 			try {
 				Connection connection = getConnection();
-				if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
-						&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 					PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
 					pstmt.setString(1, student_id);
 					
 					pstmt.executeUpdate();
-				}
+				
 				isSuccess = true;
 				
 				
@@ -231,7 +252,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				
 			}
 			
-		}
+		
 		
 		return isSuccess;
 	}
@@ -273,5 +294,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return isSuccess;
 	}
-	
+
+
 }
