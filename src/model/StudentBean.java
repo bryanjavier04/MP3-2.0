@@ -56,6 +56,31 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return capitalizeWord.trim();  
 	}
 	
+	public static int getCsStudents() {
+		return csStudents;
+	}
+
+	public static void setCsStudents() {
+		++csStudents;
+	}
+
+	public static int getIsStudents() {
+		return isStudents;
+	}
+
+	public static void setIsStudents() {
+		++isStudents;
+	}
+
+	public static int getItStudents() {
+		return itStudents;
+	}
+
+	public static void setItStudents() {
+		++itStudents;
+	}
+
+	
 	public String getStudentId() {
 		return studentId;
 	}
@@ -147,6 +172,29 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return connection;
 	}
+	
+	//ADMIN LOGIN
+	public Connection adminConnection(String adminUserName, String adminPassWord) {
+		Connection connection = null;
+		
+		try {
+			//establish java JDBC Driver
+			Class.forName(DatabaseFunction.JDBC_DRIVER);
+			connection = DriverManager.getConnection(DatabaseFunction.JDBC_CONNECTION_URL, 
+					adminUserName, adminPassWord);
+			if(connection != null) {
+				System.out.println("\nLogin is Successful");
+			}else {
+				System.out.println("\nConnection failed!");
+			}
+		}catch(ClassNotFoundException cnfe){
+			System.err.println("Driver not found! " + cnfe.getMessage());
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
+		
+		return connection;
+	}
 	public boolean insertRecord() {
 		boolean isSuccess = false;
 		
@@ -170,7 +218,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	public ResultSet printRecord() {
+	public ResultSet getRecords() {
 		ResultSet records = null;
 		
 		try {
@@ -198,9 +246,10 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			
 			if(connection != null) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_SEARCH_STUDENT);
+					
 				pstmt.setString(1, student_id);
-				
 				records = pstmt.executeQuery();
+				records.next();
 			}
 			
 		}catch(SQLException sqle) {
@@ -210,19 +259,15 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return records;
 	}
 	
-	public boolean deleteStudent(String username, String password,String student_id) {
+	public boolean deleteStudent(String student_id) {
 		boolean isSuccess = false;
 		
-		if(username.equals(DatabaseFunction.JDBC_USERNAME) && password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 			try {
 				Connection connection = getConnection();
-				if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
-						&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 					PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
 					pstmt.setString(1, student_id);
-					
 					pstmt.executeUpdate();
-				}
+				
 				isSuccess = true;
 				
 				
@@ -231,7 +276,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				
 			}
 			
-		}
+		
 		
 		return isSuccess;
 	}
@@ -255,17 +300,15 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return records;
 	}
 	
-	public boolean purgeRecords(String username, String password) {
+	public boolean purgeRecords() {
 		boolean isSuccess = false;
 		
 		try {
 			Connection connection = getConnection();
-			if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
-					&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_ALL_RECORDS);
 				pstmt.executeUpdate();
 				isSuccess = true;
-			}
+			
 			
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
@@ -274,4 +317,32 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
+	public boolean isDbEmpty(ResultSet records) {
+		boolean isEmpty = false;
+		try {
+			if(records.next() == true) {
+				isEmpty = true;
+			}else {
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isEmpty;
+	}
+	public static void courseCounter(String course) {
+		String actualCourse = course.toString();
+		System.out.println(actualCourse);
+		if(actualCourse.equals("BS CS")) {
+			setCsStudents();
+			
+		}else if(actualCourse.equals("BS IT")) {
+			setItStudents();
+		}else if(actualCourse.equals("BS IS")) {
+			setIsStudents();
+		}
+	}
+
+
 }
