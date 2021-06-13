@@ -56,6 +56,31 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return capitalizeWord.trim();  
 	}
 	
+	public static int getCsStudents() {
+		return csStudents;
+	}
+
+	public static void setCsStudents() {
+		++csStudents;
+	}
+
+	public static int getIsStudents() {
+		return isStudents;
+	}
+
+	public static void setIsStudents() {
+		++isStudents;
+	}
+
+	public static int getItStudents() {
+		return itStudents;
+	}
+
+	public static void setItStudents() {
+		++itStudents;
+	}
+
+	
 	public String getStudentId() {
 		return studentId;
 	}
@@ -241,7 +266,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				Connection connection = getConnection();
 					PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
 					pstmt.setString(1, student_id);
-					
 					pstmt.executeUpdate();
 				
 				isSuccess = true;
@@ -276,23 +300,48 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return records;
 	}
 	
-	public boolean purgeRecords(String username, String password) {
+	public boolean purgeRecords() {
 		boolean isSuccess = false;
 		
 		try {
 			Connection connection = getConnection();
-			if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
-					&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_ALL_RECORDS);
 				pstmt.executeUpdate();
 				isSuccess = true;
-			}
+			
 			
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
 		}
 		
 		return isSuccess;
+	}
+	
+	public boolean isDbEmpty(ResultSet records) {
+		boolean isEmpty = false;
+		try {
+			if(records.next() == true) {
+				isEmpty = true;
+			}else {
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isEmpty;
+	}
+	public static void courseCounter(String course) {
+		String actualCourse = course.toString();
+		System.out.println(actualCourse);
+		if(actualCourse.equals("BS CS")) {
+			setCsStudents();
+			
+		}else if(actualCourse.equals("BS IT")) {
+			setItStudents();
+		}else if(actualCourse.equals("BS IS")) {
+			setIsStudents();
+		}
 	}
 
 
