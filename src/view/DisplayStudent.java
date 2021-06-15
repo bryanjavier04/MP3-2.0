@@ -34,7 +34,6 @@ public class DisplayStudent {
 					System.out.println("Total # for IT:" + StudentBean.itStudents);
 					System.out.println("");
 					System.out.println("");
-					System.out.println("");
 	
 
 				} catch(SQLException sqle) {
@@ -69,7 +68,6 @@ public class DisplayStudent {
 			System.out.println("Record Found!");
 			System.out.println("");
 			System.out.println("");
-			System.out.println("");
 				System.out.println("ID: " + rs.getString("id"));
 				System.out.println("Name: " + Security.decrypt(rs.getString("name")));
 				System.out.println("Course: " + Security.decrypt(rs.getString("course")));
@@ -78,10 +76,7 @@ public class DisplayStudent {
 				System.out.println("");
 				System.out.println("");
 				System.out.println("");
-		
-	
-		
-	}
+		}
 	}catch(SQLException sqle) {
 		System.err.println("Record does not exist.");
 	}
@@ -95,9 +90,6 @@ public class DisplayStudent {
 		conn = studentObj.adminConnection(userName, userPassword);
 		if(conn != null) {
 			status = true;
-			System.out.println("Login Successful");
-		}else {
-			System.out.println("Login unsuccessful");
 		}
 		
 		return status;
@@ -161,7 +153,7 @@ public class DisplayStudent {
 		System.out.println("");
 		System.out.println("Please wait. Deleting all record......");
 		studObj.purgeRecords();
-		System.out.println("ALL records successfully deleted.");
+		System.out.println("\nALL records successfully deleted.");
 	}
 	public static void programTerminationOutput() {
 		System.out.println();

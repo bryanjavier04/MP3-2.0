@@ -3,10 +3,6 @@ package model;
 import java.io.Serializable;
 import utility.*;
 import java.sql.*;
-import java.util.InputMismatchException;
-
-import exception.*;
-
 import exception.InvalidCourseException;
 
 public class StudentBean implements Serializable, DatabaseFunction{
@@ -144,11 +140,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			Class.forName(DatabaseFunction.JDBC_DRIVER);
 			connection = DriverManager.getConnection(DatabaseFunction.JDBC_CONNECTION_URL, 
 					DatabaseFunction.JDBC_USERNAME, DatabaseFunction.JDBC_PASSWORD);
-			if(connection != null) {
-				System.out.println("\nConnection is valid!");
-			}else {
-				System.out.println("\nConnection failed!");
-			}
 		}catch(ClassNotFoundException cnfe){
 			System.err.println("Driver not found! " + cnfe.getMessage());
 		}catch(SQLException sqle) {
@@ -168,7 +159,8 @@ public class StudentBean implements Serializable, DatabaseFunction{
 			connection = DriverManager.getConnection(DatabaseFunction.JDBC_CONNECTION_URL, 
 					adminUserName, adminPassWord);
 			if(connection != null) {
-				System.out.println("\nLogin is Successful");
+				//format fixed
+				System.out.println("\nLogin Successful");
 			}else {
 				System.out.println("\nConnection failed!");
 			}
@@ -182,10 +174,12 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 	public boolean insertRecord() {
 		boolean isSuccess = false;
-		
+		Connection connection = getConnection();
 		try {
-			Connection connection = getConnection();
 			if(connection != null) {
+				//transaction implementation
+				connection.setAutoCommit(false);
+				
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.INSERT_INTO_STUDENTS_INFO);
 				pstmt.setString(1, this.studentId);
 				pstmt.setString(2, this.fullName);
@@ -194,10 +188,17 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				pstmt.setInt(5, this.units);
 				
 				pstmt.executeUpdate();
+				connection.commit();
 				isSuccess = true;
 			}
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
+			try {
+				//in an event of an error this will roll back the commit
+				connection.rollback();
+			}catch(SQLException sqleCom) {
+				System.err.println(sqleCom.getMessage());
+			}
 		}
 		
 		return isSuccess;
@@ -249,20 +250,17 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 			try {
 				Connection connection = getConnection();
-					PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
-					pstmt.setString(1, student_id);
-					pstmt.executeUpdate();
-				
-				isSuccess = true;
-				
-				
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.DELETE_STUDENT);
+				pstmt.setString(1, student_id);
+				if(pstmt.executeUpdate() != 0) {
+					isSuccess = true;
+				}
+					
 			}catch(SQLException sqle) {
 				System.err.println(sqle.getMessage());
 				
 			}
 			
-		
-		
 		return isSuccess;
 	}
 	

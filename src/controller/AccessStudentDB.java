@@ -26,7 +26,10 @@ public class AccessStudentDB {
 			String userName;
 			String userPassword;
 			
-			System.out.println("[A]-dd Student");
+			//fixed format
+			System.out.println("\nIACADEMY");
+			System.out.println("Student Registration Management System");
+			System.out.println("\n[A]-dd Student");
 			System.out.println("[L]-ist Students");
 			System.out.println("[S]-earch Student");
 			System.out.println("[D]-elete Student");
@@ -59,7 +62,11 @@ public class AccessStudentDB {
 					enterStudent.setYear(S.nextInt());
 					System.out.print("Enter Number of Units Enrolled: ");
 					enterStudent.setUnits(S.nextInt());
-					enterStudent.insertRecord();
+					if(enterStudent.insertRecord()) {
+						System.out.println("\nRecord Successfully Inserted!");
+					}else {
+						System.out.println("\nRecord Not Saved Due To Error!");
+					}
 					
 					
 				}catch(InputMismatchException ime) {
@@ -78,7 +85,7 @@ public class AccessStudentDB {
 					records = new StudentBean().getRecords();
 					DisplayStudent.listStudents(records);
 				}else {
-					System.out.println("Database is Empty");
+					System.out.println("\nDatabase is Empty");
 				}
 				
 				break;
@@ -126,7 +133,8 @@ public class AccessStudentDB {
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
-					System.out.println("Are you sure you want to purge all records?" );
+					//fixed format
+					System.out.print("Are you sure you want to purge all records [Y/N]?: " );
 					userChoice = S.next().charAt(0);
 					userChoice = Character.toUpperCase(userChoice);
 					if(userChoice == 'Y') {
@@ -143,7 +151,8 @@ public class AccessStudentDB {
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
-					System.out.println("Are you sure you want to terminate the application?" );
+					//fixed format
+					System.out.print("Are you sure you want to terminate the application[Y/N]?: " );
 					userChoice = S.next().charAt(0);
 					userChoice = Character.toUpperCase(userChoice);
 					if(userChoice == 'Y') {
@@ -154,11 +163,14 @@ public class AccessStudentDB {
 				   break;
 			   
 			default:
-				// Code here
+				System.err.println("INVALID CHOICE! TRY AGAIN.");
+				break;
 		}
 
 
 		}
-		}
+		
+		System.out.println("\nProgram terminated. Thank you for using the system.");
+	}
 		
 }
