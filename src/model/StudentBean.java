@@ -3,6 +3,11 @@ package model;
 import java.io.Serializable;
 import utility.*;
 import java.sql.*;
+import java.util.InputMismatchException;
+
+import exception.*;
+
+import exception.InvalidCourseException;
 
 public class StudentBean implements Serializable, DatabaseFunction{
 	/**
@@ -55,30 +60,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		
 		return capitalizeWord.trim();  
 	}
-	
-	public static int getCsStudents() {
-		return csStudents;
-	}
-
-	public static void setCsStudents() {
-		++csStudents;
-	}
-
-	public static int getIsStudents() {
-		return isStudents;
-	}
-
-	public static void setIsStudents() {
-		++isStudents;
-	}
-
-	public static int getItStudents() {
-		return itStudents;
-	}
-
-	public static void setItStudents() {
-		++itStudents;
-	}
 
 	
 	public String getStudentId() {
@@ -90,28 +71,30 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 
 	public String getLastName() {
-		Security.decrypt(lastName);
 		return lastName;
 	}
 
+	//changes made: encryption removed due to output error
 	public void setLastName(String lastName) {
+		lastName += ", ";
 		lastName = capitalize(lastName);
-		lastName = Security.encrypt(lastName);
 		this.lastName = lastName;
 	}
 
 	public String getFirstName() {
-		Security.decrypt(firstName);
 		return firstName;
 	}
-
+	
+	//changes made: encryption removed due to output error
 	public void setFirstName(String firstName) {
 		firstName = capitalize(firstName);
-		firstName = Security.encrypt(firstName);
 		this.firstName = firstName;
 	}
+	
+	//changes made: encryption of firstName and lastName moved here
 	public void concatenateFirstNameLastName() {
-		this.fullName = this.lastName + ", " + this.firstName;
+		this.fullName = this.lastName + this.firstName;
+		this.fullName = Security.encrypt(this.fullName);
 	}
 
 	public String getFullName() {
@@ -120,7 +103,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 
 	public void setFullName(String fullName) {
-		fullName = Security.encrypt(fullName);
+		Security.encrypt(fullName);
 		this.fullName = fullName;
 	}
 
@@ -130,9 +113,11 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 
 	public void setCourse(String course) {
-		course = course.toUpperCase();
-		course = Security.encrypt(course);
-		this.course = course;
+		if(course.equals("BS CS") || course.equals("BS IT") || course.equals("BS IS")) {
+			this.course = Security.encrypt(course);
+		}else {
+			throw new InvalidCourseException();
+		}
 	}
 
 	public int getYear() {
@@ -281,24 +266,36 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		return isSuccess;
 	}
 	
-	public ResultSet reportGenerator(String username, String password, String course) {
+	public ResultSet reportGenerator(String course) {
 		ResultSet records = null;
 		
 		try {
+			getCourseCount(course);
 			Connection connection = getConnection();
-			if(connection != null && username.equals(DatabaseFunction.JDBC_USERNAME)
-					&& password.equals(DatabaseFunction.JDBC_PASSWORD)) {
-				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR);
-				pstmt.setString(1, course);
-				
+			
+			if(course.equals("ALL")) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR_ALL);
+					
 				records = pstmt.executeQuery();
+			}else if(course.equals("BS CS") || course.equals("BS IT") || course.equals("BS IS")){
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR);
+				pstmt.setString(1, Security.encrypt(course));
+					
+				records = pstmt.executeQuery();
+			}else {
+				throw new InvalidCourseException();
 			}
+			
+			
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
+		}catch(InvalidCourseException ice) {
+			System.err.println("Invalid Course Code! Try Again.");
 		}
 		
 		return records;
 	}
+	
 	
 	public boolean purgeRecords() {
 		boolean isSuccess = false;
@@ -333,14 +330,55 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 	public static void courseCounter(String course) {
 		String actualCourse = course.toString();
-		System.out.println(actualCourse);
 		if(actualCourse.equals("BS CS")) {
-			setCsStudents();
-			
+			StudentBean.csStudents++;
 		}else if(actualCourse.equals("BS IT")) {
-			setItStudents();
+			StudentBean.itStudents++;
 		}else if(actualCourse.equals("BS IS")) {
-			setIsStudents();
+			StudentBean.isStudents++;
+		}
+		StudentBean.totalStudents = StudentBean.csStudents + StudentBean.itStudents
+				+ StudentBean.isStudents;
+	}
+	
+	public void getCourseCount(String course) {
+		try {
+			Connection connection = getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.COUNT_COURSE_RECORDS);
+			pstmt.setString(1, Security.encrypt(course));
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				switch(course) {
+					case "BS CS":
+						StudentBean.csStudents = rs.getInt("count");
+						break;
+				
+				}
+			}
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
+		
+	}
+	
+	public void updateStudentCounter() {
+		Connection connection = getConnection();
+		StudentBean.csStudents = 0;
+		StudentBean.itStudents = 0;
+		StudentBean.isStudents = 0;
+		try {
+			if(connection != null) {
+				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_COURSE_COLUMN);
+				ResultSet rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					courseCounter(Security.decrypt(rs.getString("course")));
+				}
+			}
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
 		}
 	}
 

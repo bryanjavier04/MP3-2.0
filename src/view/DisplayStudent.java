@@ -16,7 +16,9 @@ public class DisplayStudent {
 						System.out.println("ID: " + rs.getString("id"));
 						System.out.println("Name: " + Security.decrypt(rs.getString("name")));
 						System.out.println("Course: " + Security.decrypt(rs.getString("course")));
-						StudentBean.courseCounter(Security.decrypt(rs.getString("course")));
+						
+						//StudentBean.courseCounter(Security.decrypt(rs.getString("course")));
+						
 						System.out.println("Year Level: " + rs.getInt("yearLevel"));
 						System.out.println("Units Enrolled: " + rs.getInt("unitsEnrolled"));
 						System.out.println("");
@@ -27,9 +29,9 @@ public class DisplayStudent {
 					System.out.println("Total Students Enrolled: ");
 					System.out.println("");
 					System.out.println("");
-					System.out.println("Total # for CS:" + StudentBean.getCsStudents());
-					System.out.println("Total # for IS:" + StudentBean.getIsStudents());
-					System.out.println("Total # for IT:" + StudentBean.getItStudents());
+					System.out.println("Total # for CS:" + StudentBean.csStudents);
+					System.out.println("Total # for IS:" + StudentBean.isStudents);
+					System.out.println("Total # for IT:" + StudentBean.itStudents);
 					System.out.println("");
 					System.out.println("");
 					System.out.println("");
@@ -108,6 +110,47 @@ public class DisplayStudent {
 			System.out.println("Record found and successfully deleted!");
 		}else {
 			System.out.println("Record not found");
+		}
+		
+	}
+	
+	public static void reportGenerator(ResultSet rs, String course) {
+		if(course.equals("BS CS")) {
+			System.out.println("Total number of "+ course + " student: " + StudentBean.csStudents);
+		}else if(course.equals("BS IT")) {
+			System.out.println("Total number of "+ course + " student: " + StudentBean.itStudents);
+		}else if(course.equals("BS IS")) {
+			System.out.println("Total number of "+ course + " student: " + StudentBean.isStudents);
+		}else if (course.equals("ALL")){
+			System.out.println("Total number of students: " + StudentBean.totalStudents);
+		}else {
+			
+		}
+	
+		System.out.println("\n\nList of Students Enrolled");
+		System.out.println("=============================\n\n");
+		
+		if(rs !=null) {
+			try {
+				while(rs.next()) {
+
+					System.out.println("ID: " + rs.getString("id"));
+					System.out.println("Name: " + Security.decrypt(rs.getString("name")));
+					System.out.println("Course: " + Security.decrypt(rs.getString("course")));
+					
+					//StudentBean.courseCounter(Security.decrypt(rs.getString("course")));
+					
+					System.out.println("Year Level: " + rs.getInt("yearLevel"));
+					System.out.println("Units Enrolled: " + rs.getInt("unitsEnrolled"));
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+				}
+
+
+			} catch(SQLException sqle) {
+				System.err.println(sqle.getMessage());
+			}
 		}
 		
 	}

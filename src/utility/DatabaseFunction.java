@@ -16,14 +16,17 @@ public interface DatabaseFunction {
 	String SELECT_SEARCH_STUDENT = "SELECT * FROM student WHERE id = ?";
 	String DELETE_STUDENT =  "DELETE FROM student WHERE id = ?";
 	String SELECT_REPORT_GENERATOR = "SELECT * FROM student WHERE course = ?";
+	String SELECT_REPORT_GENERATOR_ALL = "SELECT * FROM student";
 	String DELETE_ALL_RECORDS = "TRUNCATE TABLE student";
+	String COUNT_COURSE_RECORDS = "SELECT COUNT(*) AS count FROM student WHERE course = ?";
+	String SELECT_COURSE_COLUMN = "SELECT course FROM student";
 	
 	//SQL FUNCTIONS
 	public boolean insertRecord();
 	public ResultSet getRecords();
 	public ResultSet searchStudent(String student_id);
 	public boolean deleteStudent( String student_id);
-	public ResultSet reportGenerator(String username, String password, String course);
+	public ResultSet reportGenerator(String course);
 	public boolean purgeRecords();
 	
 	

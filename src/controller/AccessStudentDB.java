@@ -3,14 +3,22 @@ import model.StudentBean;
 import view.DisplayStudent;
 import java.sql.*;
 import java.util.Scanner;
+
+import exception.InvalidCourseException;
+
 import java.util.InputMismatchException;
 
 public class AccessStudentDB {
 
 	public static void main(String[] args) {
+		//initialize StudentBean student counter
+		StudentBean studentCount = new StudentBean();
+		studentCount.updateStudentCounter();
+		
 		boolean accessRepeat = true;
 		while(accessRepeat){
 			StudentBean studentObject = new StudentBean();
+			
 			ResultSet records = null;
 			Scanner S = new Scanner(System.in);
 			boolean result = false;
@@ -55,15 +63,18 @@ public class AccessStudentDB {
 					
 					
 				}catch(InputMismatchException ime) {
-					System.err.println("\nInvalid Input" + ime.getMessage());
+					System.err.println("Invalid Input!, Please Enter An Integer\n");
+				}catch(InvalidCourseException ice) {
+					System.err.println(ice.getMessage());
 				}catch(Exception e) {
-					System.err.println("An Unknown Error Occurred.");
+					System.err.println("An Unknown Error Occurred.\n");
 				}
 				break;
 				
 			case 'L':
 				records = new StudentBean().getRecords();
 				if(studentObject.isDbEmpty(records)) {
+					studentCount.updateStudentCounter();
 					records = new StudentBean().getRecords();
 					DisplayStudent.listStudents(records);
 				}else {
@@ -93,8 +104,20 @@ public class AccessStudentDB {
 				break;
 				
 			case 'R':
-				// Code here
-					break;
+				String course;
+				S = new Scanner(System.in);
+				System.out.print("Enter administrator account: ");
+				userName = S.nextLine();
+				System.out.print("Enter administrator password: ");
+				userPassword = S.nextLine();
+				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
+					studentCount.updateStudentCounter();
+					System.out.print("Enter Course Code: ");
+					course = S.nextLine();
+					records = new StudentBean().reportGenerator(course);
+					DisplayStudent.reportGenerator(records, course);
+				}
+				break;
 
 			case 'P':
 				S = new Scanner(System.in);
