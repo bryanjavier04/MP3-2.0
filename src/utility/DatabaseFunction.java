@@ -19,6 +19,7 @@ public interface DatabaseFunction {
 	String SELECT_REPORT_GENERATOR_ALL = "SELECT * FROM student";
 	String DELETE_ALL_RECORDS = "TRUNCATE TABLE student";
 	String COUNT_COURSE_RECORDS = "SELECT COUNT(*) AS count FROM student WHERE course = ?";
+	String COUNT_ID_RECORDS = "SELECT COUNT(*) AS idcount FROM student WHERE id = ?";
 	String SELECT_COURSE_COLUMN = "SELECT course FROM student";
 	
 	//SQL FUNCTIONS

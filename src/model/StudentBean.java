@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import utility.*;
+import view.DisplayStudent;
+
 import java.sql.*;
 import exception.InvalidCourseException;
 
@@ -63,7 +65,10 @@ public class StudentBean implements Serializable, DatabaseFunction{
 	}
 
 	public void setStudentId(String studentId) {
-		this.studentId = studentId;
+	
+			this.studentId = studentId;
+		
+		
 	}
 
 	public String getLastName() {
@@ -235,7 +240,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 					
 				pstmt.setString(1, student_id);
 				records = pstmt.executeQuery();
-				records.next();
+				
 			}
 			
 		}catch(SQLException sqle) {
@@ -378,6 +383,29 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		}catch(SQLException sqle) {
 			System.err.println(sqle.getMessage());
 		}
+	}
+	
+	public boolean uniqueIdFinder(String id) {
+		boolean recordExists = false;
+		ResultSet rs = null;
+		try {
+			Connection connection = getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.COUNT_ID_RECORDS);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				int count = rs.getInt("idcount");
+				if(count > 0) {
+					recordExists = true;
+				}
+			}
+				
+		}catch(SQLException sqle){
+			System.err.println(sqle.getMessage());
+		}
+		
+		return recordExists;
+		
 	}
 
 

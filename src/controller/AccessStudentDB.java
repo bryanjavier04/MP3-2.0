@@ -14,7 +14,7 @@ public class AccessStudentDB {
 		//initialize StudentBean student counter
 		StudentBean studentCount = new StudentBean();
 		studentCount.updateStudentCounter();
-		
+		String studentID;
 		boolean accessRepeat = true;
 		while(accessRepeat){
 			StudentBean studentObject = new StudentBean();
@@ -62,11 +62,19 @@ public class AccessStudentDB {
 					enterStudent.setYear(S.nextInt());
 					System.out.print("Enter Number of Units Enrolled: ");
 					enterStudent.setUnits(S.nextInt());
-					if(enterStudent.insertRecord()) {
-						System.out.println("\nRecord Successfully Inserted!");
+					
+					if(enterStudent.uniqueIdFinder(enterStudent.getStudentId())) {
+						System.out.println(enterStudent.uniqueIdFinder(enterStudent.getStudentId()));
+						DisplayStudent.existingIdDisplay(enterStudent.getStudentId());
 					}else {
-						System.out.println("\nRecord Not Saved Due To Error!");
+						if(enterStudent.insertRecord()) {
+							System.out.println("\nRecord Successfully Inserted!");
+						}else {
+							System.out.println("\nRecord Not Saved Due To Error!");
+						}
+						
 					}
+				
 					
 					
 				}catch(InputMismatchException ime) {
@@ -91,12 +99,14 @@ public class AccessStudentDB {
 				break;
 			case 'S':
 				S = new Scanner(System.in);
+				
 				System.out.print("Enter Student ID: ");
-				records = new StudentBean().searchStudent(S.nextLine());
-				DisplayStudent.searchStudentOutput(records);
+				studentID = S.nextLine();
+				records = new StudentBean().searchStudent(studentID);
+				DisplayStudent.searchStudentOutput(records, studentID);
 				break;
 			case 'D':
-				String studentID;
+				
 				S = new Scanner(System.in);
 				System.out.print("Enter administrator account: ");
 				userName = S.nextLine();

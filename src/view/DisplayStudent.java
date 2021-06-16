@@ -51,14 +51,16 @@ public class DisplayStudent {
 		
 	
 	
-	public static void searchStudentOutput(ResultSet rs) {
+	public static void searchStudentOutput(ResultSet rs, String id) {
+
 	try {
-		if(rs != null) {
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Please wait.... searching for student record " +id);
+		if(rs.next()) {
 			
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
-			System.out.println("Please wait.... searching for student record " + rs.getString("id"));
+
 			System.out.println("");
 			System.out.println("");
 			System.out.println("");
@@ -76,6 +78,8 @@ public class DisplayStudent {
 				System.out.println("");
 				System.out.println("");
 				System.out.println("");
+		}else{
+			System.out.println("Error on record search – Student ID " + id  + " not found! Record cannot be deleted. ");
 		}
 	}catch(SQLException sqle) {
 		System.err.println("Record does not exist.");
@@ -101,7 +105,7 @@ public class DisplayStudent {
 		if(result) {
 			System.out.println("Record found and successfully deleted!");
 		}else {
-			System.out.println("Record not found");
+			System.err.println("Error on record search - Student ID " + id + " not found! Record cannot be deleted");
 		}
 		
 	}
@@ -159,6 +163,28 @@ public class DisplayStudent {
 		System.out.println();
 	}
 
+	public static void existingIdDisplay(String id) {
+		System.out.println("");
+		System.out.println("");
+		System.out.println("Error on record insert - there is already a student ID with " + id +". Listed are the details for student ID " + id +".");
+		StudentBean existingIdCheck = new StudentBean();
+		ResultSet existingEntry = existingIdCheck.searchStudent(id);
+		System.out.println("");
+		System.out.println("");
+		//
+		try {
+			if(existingEntry != null) {
+				System.out.println("ID: " + existingEntry.getString("id"));
+				System.out.println("Name: " + Security.decrypt(existingEntry.getString("name")));
+				System.out.println("Course: " + Security.decrypt(existingEntry.getString("course")) );
+				System.out.println("Year Level: " + existingEntry.getInt("yearLevel"));
+				System.out.println("Units Enrolled: " + existingEntry.getInt("unitsEnrolled"));
+			}
+		}catch(SQLException sqle) {
+			System.err.println(sqle.getMessage());
+		}
+		
+	}
 	
 
 }
