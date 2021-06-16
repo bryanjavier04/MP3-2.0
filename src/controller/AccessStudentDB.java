@@ -64,7 +64,6 @@ public class AccessStudentDB {
 					enterStudent.setUnits(S.nextInt());
 					
 					if(enterStudent.uniqueIdFinder(enterStudent.getStudentId())) {
-						System.out.println(enterStudent.uniqueIdFinder(enterStudent.getStudentId()));
 						DisplayStudent.existingIdDisplay(enterStudent.getStudentId());
 					}else {
 						if(enterStudent.insertRecord()) {
