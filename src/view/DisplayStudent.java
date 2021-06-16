@@ -26,7 +26,7 @@ public class DisplayStudent {
 						System.out.println("");
 					}
 					System.out.println("......");
-					System.out.println("Total Students Enrolled: ");
+					System.out.println("Total Students Enrolled: " + StudentBean.totalStudents);
 					System.out.println("");
 					System.out.println("");
 					System.out.println("Total # for CS:" + StudentBean.csStudents);
