@@ -66,7 +66,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 
 	public void setStudentId(String studentId) {
 	
-			this.studentId = studentId;
+		this.studentId = studentId;
 		
 		
 	}
@@ -273,7 +273,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 		ResultSet records = null;
 		
 		try {
-			getCourseCount(course);
 			Connection connection = getConnection();
 			
 			if(course.equals("ALL")) {
@@ -344,27 +343,6 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				+ StudentBean.isStudents;
 	}
 	
-	public void getCourseCount(String course) {
-		try {
-			Connection connection = getConnection();
-			PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.COUNT_COURSE_RECORDS);
-			pstmt.setString(1, Security.encrypt(course));
-			
-			ResultSet rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				switch(course) {
-					case "BS CS":
-						StudentBean.csStudents = rs.getInt("count");
-						break;
-				
-				}
-			}
-		}catch(SQLException sqle) {
-			System.err.println(sqle.getMessage());
-		}
-		
-	}
 	
 	public void updateStudentCounter() {
 		Connection connection = getConnection();

@@ -79,7 +79,7 @@ public class DisplayStudent {
 				System.out.println("");
 				System.out.println("");
 		}else{
-			System.out.println("Error on record search – Student ID " + id  + " not found! Record cannot be deleted. ");
+			System.out.println("Error on record search ï¿½ Student ID " + id  + " not found! Record cannot be deleted. ");
 		}
 	}catch(SQLException sqle) {
 		System.err.println("Record does not exist.");
@@ -173,7 +173,9 @@ public class DisplayStudent {
 		System.out.println("");
 		//
 		try {
-			if(existingEntry != null) {
+			
+			//changed from "existingEntry != null" to "existingEntry.next()"
+			if(existingEntry.next()) {
 				System.out.println("ID: " + existingEntry.getString("id"));
 				System.out.println("Name: " + Security.decrypt(existingEntry.getString("name")));
 				System.out.println("Course: " + Security.decrypt(existingEntry.getString("course")) );
