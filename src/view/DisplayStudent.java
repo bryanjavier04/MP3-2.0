@@ -59,12 +59,6 @@ public class DisplayStudent {
 		System.out.println("");
 		System.out.println("Please wait.... searching for student record " +id);
 		if(rs.next()) {
-			
-
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
 			System.out.println("");
 			System.out.println("");
 			System.out.println("Record Found!");
@@ -79,7 +73,7 @@ public class DisplayStudent {
 				System.out.println("");
 				System.out.println("");
 		}else{
-			System.out.println("Error on record search � Student ID " + id  + " not found! Record cannot be deleted. ");
+			System.err.println("Error on record search - Student ID " + id  + " not found!");
 		}
 	}catch(SQLException sqle) {
 		System.err.println("Record does not exist.");
@@ -101,24 +95,24 @@ public class DisplayStudent {
 	}
 	
 	public static void searchDeleteStudentOutput(boolean result, String id) {
-		System.out.println("Please wait.... searching for student record " + id);
+		System.out.println("\n\nPlease wait.... searching for student record " + id);
 		if(result) {
 			System.out.println("Record found and successfully deleted!");
 		}else {
-			System.err.println("Error on record search - Student ID " + id + " not found! Record cannot be deleted");
+			System.err.println("Error on record search - Student ID " + id + " not found! Record cannot be deleted.");
 		}
 		
 	}
 	
 	public static void reportGenerator(ResultSet rs, String course) {
-		if(course.equals("BS CS")) {
-			System.out.println("Total number of "+ course + " student: " + StudentBean.csStudents);
-		}else if(course.equals("BS IT")) {
-			System.out.println("Total number of "+ course + " student: " + StudentBean.itStudents);
-		}else if(course.equals("BS IS")) {
-			System.out.println("Total number of "+ course + " student: " + StudentBean.isStudents);
+		if(course.equals("BS CS") || course.equals("BS-CS")) {
+			System.out.println("\n\nTotal number of "+ course + " student: " + StudentBean.csStudents);
+		}else if(course.equals("BS IT") || course.equals("BS-IT")) {
+			System.out.println("\n\nTotal number of "+ course + " student: " + StudentBean.itStudents);
+		}else if(course.equals("BS IS") || course.equals("BS-IS")) {
+			System.out.println("\n\nTotal number of "+ course + " student: " + StudentBean.isStudents);
 		}else if (course.equals("ALL")){
-			System.out.println("Total number of students: " + StudentBean.totalStudents);
+			System.out.println("\n\nTotal number of students: " + StudentBean.totalStudents);
 		}else {
 			
 		}
@@ -155,12 +149,12 @@ public class DisplayStudent {
 		StudentBean studObj = new StudentBean();
 		System.out.println("");
 		System.out.println("");
-		System.out.println("Please wait. Deleting all record......");
+		System.out.println("Please wait. Deleting all records......");
 		studObj.purgeRecords();
 		System.out.println("\nALL records successfully deleted.");
 	}
 	public static void programTerminationOutput() {
-		System.out.println();
+		System.out.println("\n\nProgram terminated. Thank you for using the system.");
 	}
 
 	public static void existingIdDisplay(String id) {

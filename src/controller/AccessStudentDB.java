@@ -48,7 +48,7 @@ public class AccessStudentDB {
 				try {
 					S = new Scanner(System.in);
 					StudentBean enterStudent = new StudentBean();
-					System.out.print("Enter Student ID: ");
+					System.out.print("\n\nEnter Student ID: ");
 					enterStudent.setStudentId(S.nextLine());
 					System.out.print("Enter Student Last Name: ");
 					enterStudent.setLastName(S.nextLine());
@@ -67,7 +67,7 @@ public class AccessStudentDB {
 						DisplayStudent.existingIdDisplay(enterStudent.getStudentId());
 					}else {
 						if(enterStudent.insertRecord()) {
-							System.out.println("\nRecord Successfully Inserted!");
+							System.out.println("\nRecord successfully inserted.");
 						}else {
 							System.out.println("\nRecord Not Saved Due To Error!");
 						}
@@ -92,7 +92,7 @@ public class AccessStudentDB {
 					records = new StudentBean().getRecords();
 					DisplayStudent.listStudents(records);
 				}else {
-					System.out.println("\nDatabase is Empty");
+					System.out.println("\nDatabase is empty.");
 				}
 				
 				break;
@@ -107,12 +107,13 @@ public class AccessStudentDB {
 			case 'D':
 				
 				S = new Scanner(System.in);
-				System.out.print("Enter administrator account: ");
+				System.out.print("\n\nEnter administrator account: ");
 				userName = S.nextLine();
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
-					System.out.print("Enter Student ID: ");
+					System.out.println("\n\nLogin successful!");
+					System.out.print("\n\nEnter Student ID: ");
 					studentID = S.nextLine();
 					result = new StudentBean().deleteStudent(studentID);
 					DisplayStudent.searchDeleteStudentOutput(result, studentID);
@@ -122,13 +123,14 @@ public class AccessStudentDB {
 			case 'R':
 				String course;
 				S = new Scanner(System.in);
-				System.out.print("Enter administrator account: ");
+				System.out.print("\n\nEnter administrator account: ");
 				userName = S.nextLine();
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
 					studentCount.updateStudentCounter();
-					System.out.print("Enter Course Code: ");
+					System.out.print("\n\nReport Generator Facility ");
+					System.out.print("\n\nEnter Course Code: ");
 					course = S.nextLine();
 					records = new StudentBean().reportGenerator(course);
 					DisplayStudent.reportGenerator(records, course);
@@ -137,13 +139,13 @@ public class AccessStudentDB {
 
 			case 'P':
 				S = new Scanner(System.in);
-				System.out.print("Enter administrator account: ");
+				System.out.print("\n\nEnter administrator account: ");
 				userName = S.nextLine();
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
 					//fixed format
-					System.out.print("Are you sure you want to purge all records [Y/N]?: " );
+					System.out.print("\n\nAre you sure you want to purge all records [Y/N]?: " );
 					userChoice = S.next().charAt(0);
 					userChoice = Character.toUpperCase(userChoice);
 					if(userChoice == 'Y') {
@@ -155,18 +157,17 @@ public class AccessStudentDB {
 			case 'Q':
 				
 				S = new Scanner(System.in);
-				System.out.print("Enter administrator account: ");
+				System.out.print("\n\nEnter administrator account: ");
 				userName = S.nextLine();
 				System.out.print("Enter administrator password: ");
 				userPassword = S.nextLine();
 				if(DisplayStudent.adminAuthentication(userName, userPassword)) {
 					//fixed format
-					System.out.print("Are you sure you want to terminate the application[Y/N]?: " );
+					System.out.print("\n\nAre you sure you want to terminate the application[Y/N]?: " );
 					userChoice = S.next().charAt(0);
 					userChoice = Character.toUpperCase(userChoice);
 					if(userChoice == 'Y') {
 						accessRepeat = false;
-						DisplayStudent.programTerminationOutput();
 					}
 				}
 				   break;
@@ -178,8 +179,7 @@ public class AccessStudentDB {
 
 
 		}
-		
-		System.out.println("\nProgram terminated. Thank you for using the system.");
+			DisplayStudent.programTerminationOutput();
 	}
 		
 }

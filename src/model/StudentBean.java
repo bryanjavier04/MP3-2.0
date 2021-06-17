@@ -2,8 +2,6 @@ package model;
 
 import java.io.Serializable;
 import utility.*;
-import view.DisplayStudent;
-
 import java.sql.*;
 import exception.InvalidCourseException;
 
@@ -165,7 +163,7 @@ public class StudentBean implements Serializable, DatabaseFunction{
 					adminUserName, adminPassWord);
 			if(connection != null) {
 				//format fixed
-				System.out.println("\nLogin Successful");
+				
 			}else {
 				System.out.println("\nConnection failed!");
 			}
@@ -279,8 +277,15 @@ public class StudentBean implements Serializable, DatabaseFunction{
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR_ALL);
 					
 				records = pstmt.executeQuery();
-			}else if(course.equals("BS CS") || course.equals("BS IT") || course.equals("BS IS")){
+			}else if(course.equals("BS CS") || course.equals("BS IT") || course.equals("BS IS") || course.equals("BS-CS") || course.equals("BS-IT") || course.equals("BS-IS")){
 				PreparedStatement pstmt = connection.prepareStatement(DatabaseFunction.SELECT_REPORT_GENERATOR);
+				if(course.equals("BS-CS")) {
+					course = "BS CS";
+				}else if(course.equals("BS-IT")) {
+					course = "BS IT";
+				}else if(course.equals("BS-IS")) {
+					course = "BS IS";
+				}
 				pstmt.setString(1, Security.encrypt(course));
 					
 				records = pstmt.executeQuery();
