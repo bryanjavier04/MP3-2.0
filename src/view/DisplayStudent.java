@@ -13,9 +13,9 @@ public class DisplayStudent {
 				try {
 					while(rs.next()) {
 
-						System.out.println("ID: " + rs.getString("id"));
+						System.out.println("ID: " + Security.decrypt(rs.getString("id")));
 						System.out.println("Name: " + Security.decrypt(rs.getString("name")));
-						System.out.println("Course: " + Security.decrypt(rs.getString("course")));
+						System.out.println("Course: " + rs.getString("course"));
 						
 						//StudentBean.courseCounter(Security.decrypt(rs.getString("course")));
 						
@@ -64,9 +64,9 @@ public class DisplayStudent {
 			System.out.println("Record Found!");
 			System.out.println("");
 			System.out.println("");
-				System.out.println("ID: " + rs.getString("id"));
+				System.out.println("ID: " + Security.decrypt(rs.getString("id")));
 				System.out.println("Name: " + Security.decrypt(rs.getString("name")));
-				System.out.println("Course: " + Security.decrypt(rs.getString("course")));
+				System.out.println("Course: " + rs.getString("course"));
 				System.out.println("Year Level: " + rs.getInt("yearLevel"));
 				System.out.println("Units Enrolled: " + rs.getInt("unitsEnrolled"));
 				System.out.println("");
@@ -124,9 +124,9 @@ public class DisplayStudent {
 			try {
 				while(rs.next()) {
 
-					System.out.println("ID: " + rs.getString("id"));
+					System.out.println("ID: " + Security.decrypt(rs.getString("id")));
 					System.out.println("Name: " + Security.decrypt(rs.getString("name")));
-					System.out.println("Course: " + Security.decrypt(rs.getString("course")));
+					System.out.println("Course: " + rs.getString("course"));
 					
 					//StudentBean.courseCounter(Security.decrypt(rs.getString("course")));
 					
