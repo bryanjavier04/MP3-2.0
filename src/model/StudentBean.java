@@ -155,7 +155,7 @@ public class StudentBean{
 		return records;
 	}
 	
-	public ResultSet searchStudent(String student_id) {
+	public ResultSet searchStudentIdRecord(String student_id) {
 		ResultSet records = null;
 		try {
 			Connection connection = getConnection();
@@ -174,7 +174,7 @@ public class StudentBean{
 		return records;
 	}
 	
-	public boolean deleteStudent(String student_id) {
+	public boolean deleteStudentIdRecord(String student_id) {
 		boolean isSuccess = false;
 			try {
 				Connection connection = getConnection();

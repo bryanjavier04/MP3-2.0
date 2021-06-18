@@ -81,20 +81,8 @@ public class DisplayStudent {
 		
 		}
 	
-	public static boolean adminAuthentication(String userName, String userPassword) {
-		boolean status = false;
-		Connection conn = null;
-		StudentBean studentObj = new StudentBean();
-		conn = studentObj.adminConnection(userName, userPassword);
-		if(conn != null) {
-			status = true;
-		}
-		
-		return status;
-		
-	}
 	
-	public static void searchDeleteStudentOutput(boolean result, String id) {
+	public static void deleteStudentOutput(boolean result, String id) {
 		System.out.println("\n\nPlease wait.... searching for student record " + id);
 		if(result) {
 			System.out.println("Record found and successfully deleted!");
@@ -153,34 +141,8 @@ public class DisplayStudent {
 		studObj.purgeRecords();
 		System.out.println("\nALL records successfully deleted.");
 	}
-	public static void programTerminationOutput() {
-		System.out.println("\n\nProgram terminated. Thank you for using the system.");
-	}
 
-	public static void existingIdDisplay(String id) {
-		System.out.println("");
-		System.out.println("");
-		System.out.println("Error on record insert - there is already a student ID with " + id +". Listed are the details for student ID " + id +".");
-		StudentBean existingIdCheck = new StudentBean();
-		ResultSet existingEntry = existingIdCheck.searchStudent(id);
-		System.out.println("");
-		System.out.println("");
-		//
-		try {
-			
-			//changed from "existingEntry != null" to "existingEntry.next()"
-			if(existingEntry.next()) {
-				System.out.println("ID: " + existingEntry.getString("id"));
-				System.out.println("Name: " + Security.decrypt(existingEntry.getString("name")));
-				System.out.println("Course: " + Security.decrypt(existingEntry.getString("course")) );
-				System.out.println("Year Level: " + existingEntry.getInt("yearLevel"));
-				System.out.println("Units Enrolled: " + existingEntry.getInt("unitsEnrolled"));
-			}
-		}catch(SQLException sqle) {
-			System.err.println(sqle.getMessage());
-		}
-		
-	}
+
 	
 
 }
